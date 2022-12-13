@@ -179,4 +179,24 @@ public class PhotoController : ControllerBase
         return File(stream, "image/png");
     }
 
+
+    [HttpPost("saveRecording")]
+    public async Task<IActionResult> SaveRecording(IFormFile audioFile)
+    {
+        _logger.LogTrace("SaveRecording");
+
+        if (audioFile == null)
+        {
+            return BadRequest();
+        }
+
+        var path = Path.Combine(_storagePath, "test.occ");
+        using (var stream = new FileStream(path, FileMode.Create))
+        {
+            await audioFile.CopyToAsync(stream);
+        }
+
+        return Ok(audioFile.FileName ?? "no file name");
+    }
+
 }
