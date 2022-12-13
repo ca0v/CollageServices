@@ -9,7 +9,7 @@ public class AudioController : ControllerBase
 {
     private readonly ILogger<PhotoController> _logger;
     private DB DB;
-    private const string _storagePath = "./photos";
+    private const string _storagePath = "./audio";
 
 
     public AudioController(ILogger<PhotoController> logger)
@@ -17,6 +17,7 @@ public class AudioController : ControllerBase
         _logger = logger;
         DB = new DB();
         DB.CreateDatabase();
+        Directory.CreateDirectory(_storagePath);
         _logger.LogTrace("AudioController created");
     }
 
@@ -37,13 +38,17 @@ public class AudioController : ControllerBase
             return BadRequest();
         }
 
+        var title = audioFile.FileName;
+
         var path = Path.Combine(_storagePath, $"{id}.mp3");
         using (var stream = new FileStream(path, FileMode.Create))
         {
             await audioFile.CopyToAsync(stream);
         }
 
-        return Ok(audioFile.FileName ?? "no file name");
+        DB.SaveRecording(id, title);
+
+        return Ok(title ?? "no title provided");
     }
 
     [HttpGet("get")]
@@ -65,7 +70,7 @@ public class AudioController : ControllerBase
         }
 
         var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-        return File(stream, "audio/mpeg");
+        return File(stream, "audio/ogg; codecs=opus");
     }
 
     // get all recordings
@@ -73,13 +78,7 @@ public class AudioController : ControllerBase
     public IActionResult GetRecordings()
     {
         _logger.LogTrace("GetRecordings");
-        var recordingInfos = new List<RecordingInfo>();
-        var files = Directory.GetFiles(_storagePath, "*.mp3");
-        foreach (var file in files)
-        {
-            var id = Path.GetFileNameWithoutExtension(file);
-            recordingInfos.Add(new RecordingInfo { id = id, title = id });
-        }
+        var recordingInfos = DB.GetRecordings();
         return Ok(recordingInfos);
     }
 
@@ -95,6 +94,8 @@ public class AudioController : ControllerBase
             _logger.LogError("Invalid id: {id}", id);
             return BadRequest();
         }
+
+        DB.DeleteRecording(id);
 
         var path = Path.Combine(_storagePath, $"{id}.mp3");
         if (!System.IO.File.Exists(path))

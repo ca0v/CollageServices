@@ -17,7 +17,6 @@ public partial class PhotoController : ControllerBase
     {
         _logger = logger;
         Directory.CreateDirectory(_storagePath);
-        Directory.CreateDirectory(Path.Combine(_storagePath, "logs"));
         DB = new DB();
         DB.CreateDatabase();
         _logger.LogTrace("PhotoController created");

@@ -38,6 +38,11 @@ public class DB
             createTable = connection.CreateCommand();
             createTable.CommandText = "CREATE TABLE IF NOT EXISTS collages (id TEXT PRIMARY KEY, data TEXT)";
             createTable.ExecuteNonQuery();
+
+            // create recordings table
+            createTable = connection.CreateCommand();
+            createTable.CommandText = "CREATE TABLE IF NOT EXISTS recordings (id TEXT PRIMARY KEY, title TEXT)";
+            createTable.ExecuteNonQuery();
         }
     }
 
@@ -158,6 +163,56 @@ public class DB
                 collages.Add(collage);
             }
             return collages;
+        }
+    }
+
+    internal void SaveRecording(string id, string title)
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            // insert a row
+            var insert = connection.CreateCommand();
+            insert.CommandText = "INSERT INTO recordings (id, title) VALUES (@id, @title)";
+            insert.Parameters.AddWithValue("@id", id);
+            insert.Parameters.AddWithValue("@title", title);
+            insert.ExecuteNonQuery();
+        }
+    }
+
+    internal IList<Recording> GetRecordings()
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            var select = connection.CreateCommand();
+            select.CommandText = "SELECT * FROM recordings";
+            var reader = select.ExecuteReader();
+            var recordings = new List<Recording>();
+            while (reader.Read())
+            {
+                recordings.Add(new Recording
+                {
+                    id = reader.GetString(0),
+                    title = reader.GetString(1)
+                });
+            }
+            return recordings;
+        }
+    }
+
+    internal void DeleteRecording(string id)
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            var delete = connection.CreateCommand();
+            delete.CommandText = "DELETE FROM recordings WHERE id = @id";
+            delete.Parameters.AddWithValue("@id", id);
+            if (0 == delete.ExecuteNonQuery())
+            {
+                throw new Exception($"Recording with id {id} not found");
+            };
         }
     }
 }
