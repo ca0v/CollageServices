@@ -104,6 +104,17 @@ public class PhotoController : ControllerBase
     }
 
 
+    // service method to receive a json object and store it in the database
+    [Consumes("application/json")]
+    [HttpPost("save")]
+    public IActionResult SaveCollage([FromQuery] string collageId, CollageState data)
+    {
+        _logger.LogTrace("SaveCollage", collageId);
+        // return data as part of the response
+        DB.SaveCollage(data);
+        return Ok(data);
+    }
+
     // delete the image with the given id
     [HttpGet("delete", Name = "DeletePhotoById")]
     public IActionResult Delete(string id)

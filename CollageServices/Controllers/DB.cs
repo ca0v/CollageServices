@@ -1,5 +1,6 @@
 namespace ImageRipper;
 using Microsoft.Data.Sqlite;
+using Newtonsoft.Json;
 
 public class DB
 {
@@ -32,6 +33,35 @@ public class DB
             var createTable = connection.CreateCommand();
             createTable.CommandText = "CREATE TABLE IF NOT EXISTS photos (id TEXT PRIMARY KEY, filename TEXT, created TEXT, width INTEGER, height INTEGER)";
             createTable.ExecuteNonQuery();
+
+            // create a generic blob storage for storing any json data, specifically a collage
+            createTable = connection.CreateCommand();
+            createTable.CommandText = "CREATE TABLE IF NOT EXISTS collages (id TEXT PRIMARY KEY, data TEXT)";
+            createTable.ExecuteNonQuery();
+        }
+    }
+
+    public void SaveCollage(CollageState collage)
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            // if the collage already exists, update it
+            var update = connection.CreateCommand();
+            update.CommandText = "UPDATE collages SET data = @data WHERE id = @id";
+            update.Parameters.AddWithValue("@id", collage.id);
+            update.Parameters.AddWithValue("@data", JsonConvert.SerializeObject(collage));
+            var rows = update.ExecuteNonQuery();
+            if (rows == 0)
+            {
+                // insert a row
+                var insert = connection.CreateCommand();
+                insert.CommandText = "INSERT INTO collages (id, data) VALUES (@id, @data)";
+                insert.Parameters.AddWithValue("@id", collage.id);
+                insert.Parameters.AddWithValue("@data", JsonConvert.SerializeObject(collage));
+                insert.ExecuteNonQuery();
+            }
+
         }
     }
 
