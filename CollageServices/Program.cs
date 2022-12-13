@@ -15,7 +15,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(policy => policy.WithOrigins("http://localhost:5173").AllowAnyMethod().AllowAnyHeader().WithExposedHeaders("*"));
+// read "AllowedOrigins" from appsettings.json
+var origins = builder.Configuration.GetValue<string>("AllowedOrigins")?.Split(';');
+if (origins == null)
+{
+    throw new Exception("Cors whitelist not found in appsettings.json");
+}
+
+app.UseCors(policy => policy.WithOrigins(origins).AllowAnyMethod().AllowAnyHeader().WithExposedHeaders("*"));
 
 app.MapControllers();
 
