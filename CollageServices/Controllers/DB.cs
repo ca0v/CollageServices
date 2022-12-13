@@ -141,4 +141,23 @@ public class DB
             delete.ExecuteNonQuery();
         }
     }
+
+    internal IEnumerable<CollageState> GetCollages()
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            var select = connection.CreateCommand();
+            select.CommandText = "SELECT * FROM collages";
+            var reader = select.ExecuteReader();
+            var collages = new List<CollageState>();
+            while (reader.Read())
+            {
+                var collage = JsonConvert.DeserializeObject<CollageState>(reader.GetString(1));
+                if (collage is null) continue;
+                collages.Add(collage);
+            }
+            return collages;
+        }
+    }
 }

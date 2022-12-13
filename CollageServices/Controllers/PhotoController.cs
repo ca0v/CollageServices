@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 [ApiController]
 [Route("[controller]")]
-public class PhotoController : ControllerBase
+public partial class PhotoController : ControllerBase
 {
 
     private DB DB;
@@ -104,17 +104,6 @@ public class PhotoController : ControllerBase
     }
 
 
-    // service method to receive a json object and store it in the database
-    [Consumes("application/json")]
-    [HttpPost("save")]
-    public IActionResult SaveCollage([FromQuery] string collageId, CollageState data)
-    {
-        _logger.LogTrace("SaveCollage", collageId);
-        // return data as part of the response
-        DB.SaveCollage(data);
-        return Ok(data);
-    }
-
     // delete the image with the given id
     [HttpGet("delete", Name = "DeletePhotoById")]
     public IActionResult Delete(string id)
@@ -178,97 +167,4 @@ public class PhotoController : ControllerBase
         var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
         return File(stream, "image/png");
     }
-
-
-    [HttpPost("saveRecording")]
-    public async Task<IActionResult> SaveRecording([FromQuery] string id, IFormFile audioFile)
-    {
-        _logger.LogTrace("SaveRecording");
-
-        if (audioFile == null)
-        {
-            return BadRequest();
-        }
-
-        // id must contain only digits [0-9]
-        if (!Regex.IsMatch(id, @"^\d+$"))
-        {
-            _logger.LogError("Invalid id: {id}", id);
-            return BadRequest();
-        }
-
-        var path = Path.Combine(_storagePath, $"{id}.mp3");
-        using (var stream = new FileStream(path, FileMode.Create))
-        {
-            await audioFile.CopyToAsync(stream);
-        }
-
-        return Ok(audioFile.FileName ?? "no file name");
-    }
-
-    [HttpGet("getRecording")]
-    public IActionResult GetRecording([FromQuery] string id)
-    {
-        _logger.LogTrace("GetRecording");
-
-        // id must contain only digits [0-9]
-        if (!Regex.IsMatch(id, @"^\d+$"))
-        {
-            _logger.LogError("Invalid id: {id}", id);
-            return BadRequest();
-        }
-
-        var path = Path.Combine(_storagePath, $"{id}.mp3");
-        if (!System.IO.File.Exists(path))
-        {
-            return NotFound();
-        }
-
-        var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-        return File(stream, "audio/mpeg");
-    }
-
-    // get all recordings
-    [HttpGet("getRecordings")]
-    public IActionResult GetRecordings()
-    {
-        _logger.LogTrace("GetRecordings");
-        var recordingInfos = new List<RecordingInfo>();
-        var files = Directory.GetFiles(_storagePath, "*.mp3");
-        foreach (var file in files)
-        {
-            var id = Path.GetFileNameWithoutExtension(file);
-            recordingInfos.Add(new RecordingInfo { id = id, title = id });
-        }
-        return Ok(recordingInfos);
-    }
-
-    // delete recording
-    [HttpGet("deleteRecording")]
-    public IActionResult DeleteRecording([FromQuery] string id)
-    {
-        _logger.LogTrace("DeleteRecording");
-
-        // id must contain only digits [0-9]
-        if (!Regex.IsMatch(id, @"^\d+$"))
-        {
-            _logger.LogError("Invalid id: {id}", id);
-            return BadRequest();
-        }
-
-        var path = Path.Combine(_storagePath, $"{id}.mp3");
-        if (!System.IO.File.Exists(path))
-        {
-            return NotFound();
-        }
-
-        System.IO.File.Delete(path);
-        return Ok();
-    }
-}
-
-public class RecordingInfo
-{
-    public string? id { get; set; }
-    public string? title { get; set; }
 }
