@@ -14,6 +14,7 @@ public class CollageState
     public string id { get; set; }
     public string title { get; set; }
     public CollageCellState[] data { get; set; }
+    public string? note { get; set; }
 }
 
 public class CollageCellState
