@@ -181,7 +181,7 @@ public class PhotoController : ControllerBase
 
 
     [HttpPost("saveRecording")]
-    public async Task<IActionResult> SaveRecording(IFormFile audioFile)
+    public async Task<IActionResult> SaveRecording([FromQuery] string id, IFormFile audioFile)
     {
         _logger.LogTrace("SaveRecording");
 
@@ -190,7 +190,14 @@ public class PhotoController : ControllerBase
             return BadRequest();
         }
 
-        var path = Path.Combine(_storagePath, "test.occ");
+        // id must contain only digits [0-9]
+        if (!Regex.IsMatch(id, @"^\d+$"))
+        {
+            _logger.LogError("Invalid id: {id}", id);
+            return BadRequest();
+        }
+
+        var path = Path.Combine(_storagePath, $"{id}.mp3");
         using (var stream = new FileStream(path, FileMode.Create))
         {
             await audioFile.CopyToAsync(stream);
@@ -199,4 +206,69 @@ public class PhotoController : ControllerBase
         return Ok(audioFile.FileName ?? "no file name");
     }
 
+    [HttpGet("getRecording")]
+    public IActionResult GetRecording([FromQuery] string id)
+    {
+        _logger.LogTrace("GetRecording");
+
+        // id must contain only digits [0-9]
+        if (!Regex.IsMatch(id, @"^\d+$"))
+        {
+            _logger.LogError("Invalid id: {id}", id);
+            return BadRequest();
+        }
+
+        var path = Path.Combine(_storagePath, $"{id}.mp3");
+        if (!System.IO.File.Exists(path))
+        {
+            return NotFound();
+        }
+
+        var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+        return File(stream, "audio/mpeg");
+    }
+
+    // get all recordings
+    [HttpGet("getRecordings")]
+    public IActionResult GetRecordings()
+    {
+        _logger.LogTrace("GetRecordings");
+        var recordingInfos = new List<RecordingInfo>();
+        var files = Directory.GetFiles(_storagePath, "*.mp3");
+        foreach (var file in files)
+        {
+            var id = Path.GetFileNameWithoutExtension(file);
+            recordingInfos.Add(new RecordingInfo { id = id, title = id });
+        }
+        return Ok(recordingInfos);
+    }
+
+    // delete recording
+    [HttpGet("deleteRecording")]
+    public IActionResult DeleteRecording([FromQuery] string id)
+    {
+        _logger.LogTrace("DeleteRecording");
+
+        // id must contain only digits [0-9]
+        if (!Regex.IsMatch(id, @"^\d+$"))
+        {
+            _logger.LogError("Invalid id: {id}", id);
+            return BadRequest();
+        }
+
+        var path = Path.Combine(_storagePath, $"{id}.mp3");
+        if (!System.IO.File.Exists(path))
+        {
+            return NotFound();
+        }
+
+        System.IO.File.Delete(path);
+        return Ok();
+    }
+}
+
+public class RecordingInfo
+{
+    public string? id { get; set; }
+    public string? title { get; set; }
 }
