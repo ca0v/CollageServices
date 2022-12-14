@@ -1,22 +1,12 @@
 namespace ImageRipper;
 
-public class PhotoInfo
+public class CollageData
 {
-    public string? id { get; set; }
-    public string? filename { get; set; }
-    public string? created { get; set; }
-    public int width { get; set; }
-    public int height { get; set; }
+    public string? Id { get; set; }
+    public string? Title { get; set; }
+    public string? Note { get; set; }
+    public CollageCellState[]? Data { get; set; }
 }
-
-public class CollageState
-{
-    public string? id { get; set; }
-    public string? title { get; set; }
-    public CollageCellState[]? data { get; set; }
-    public string? note { get; set; }
-}
-
 public class CollageCellState
 {
     public string? id { get; set; }
@@ -33,6 +23,7 @@ public class CollageCellState
 public class CollageCellBackground
 {
     public string? fill { get; set; }
+
     public string? stroke { get; set; }
 }
 

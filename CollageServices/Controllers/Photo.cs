@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ImageRipper.Test;
+namespace ImageRipper;
 
 public partial class Photo
 {

@@ -16,7 +16,6 @@ public class AudioController : ControllerBase
     {
         _logger = logger;
         DB = new DB();
-        DB.CreateDatabase();
         Directory.CreateDirectory(_storagePath);
         _logger.LogTrace("AudioController created");
     }
@@ -75,7 +74,7 @@ public class AudioController : ControllerBase
 
     // get all recordings
     [HttpGet("list")]
-    public IEnumerable<ImageRipper.Test.Recording> GetRecordings()
+    public IEnumerable<ImageRipper.Recording> GetRecordings()
     {
         _logger.LogTrace("GetRecordings");
         var recordingInfos = DB.GetRecordings();

@@ -18,12 +18,11 @@ public partial class PhotoController : ControllerBase
         _logger = logger;
         Directory.CreateDirectory(_storagePath);
         DB = new DB();
-        DB.CreateDatabase();
         _logger.LogTrace("PhotoController created");
     }
 
     [HttpGet("list")]
-    public IEnumerable<PhotoInfo> GetAllPhotos()
+    public IEnumerable<Photo> GetAllPhotos()
     {
         _logger.LogTrace("GetAllPhotos");
         return DB.GetPhotoInfos();
@@ -90,7 +89,7 @@ public partial class PhotoController : ControllerBase
         // save the image info
         try
         {
-            DB.SavePhoto(new PhotoInfo { id = id, filename = filename, created = created, width = width, height = height });
+            DB.SavePhoto(new Photo { Id = id, Filename = filename, Created = created, Width = width, Height = height });
         }
         catch (Exception e)
         {
@@ -117,13 +116,13 @@ public partial class PhotoController : ControllerBase
         // lookup the path to the image in the database
         var photoInfo = DB.GetPhotoInfo(id);
 
-        if (photoInfo.filename == null)
+        if (photoInfo.Filename == null)
         {
             return NotFound();
         }
 
         // delete the image
-        var path = Path.Combine(_storagePath, photoInfo.filename);
+        var path = Path.Combine(_storagePath, photoInfo.Filename);
         System.IO.File.Delete(path);
 
         // delete the image info
@@ -151,13 +150,13 @@ public partial class PhotoController : ControllerBase
         // lookup the path to the image in the database
         var photo = DB.GetPhotoInfo(id);
 
-        if (photo.filename == null)
+        if (photo.Filename == null)
         {
             return NotFound();
         }
 
         // get the image
-        var path = Path.Combine(_storagePath, photo.filename);
+        var path = Path.Combine(_storagePath, photo.Filename);
         if (!System.IO.File.Exists(path))
         {
             return NotFound();

@@ -1,8 +1,11 @@
-namespace ImageRipper
+﻿using System;
+using System.Collections.Generic;
+
+namespace ImageRipper;
+
+public partial class Recording
 {
-    public class Recording
-    {
-        public string? id { get; set; }
-        public string? title { get; set; }
-    }
+    public string Id { get; set; } = null!;
+
+    public string? Title { get; set; }
 }
