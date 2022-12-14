@@ -1,8 +1,8 @@
 namespace ImageRipper
 {
-    internal class Recording
+    public class Recording
     {
-        public string id { get; set; }
+        public string? id { get; set; }
         public string? title { get; set; }
     }
 }

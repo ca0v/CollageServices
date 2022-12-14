@@ -8,18 +8,15 @@ public class CollageController : ControllerBase
 {
 
     private DB DB;
-    private const string _storagePath = "./photos";
 
-    private readonly ILogger<PhotoController> _logger;
+    private readonly ILogger<CollageController> _logger;
 
-    public CollageController(ILogger<PhotoController> logger)
+    public CollageController(ILogger<CollageController> logger)
     {
         _logger = logger;
-        Directory.CreateDirectory(_storagePath);
-        Directory.CreateDirectory(Path.Combine(_storagePath, "logs"));
         DB = new DB();
         DB.CreateDatabase();
-        _logger.LogTrace("PhotoController created");
+        _logger.LogTrace("CollageController created");
     }
 
     // service method to receive a json object and store it in the database

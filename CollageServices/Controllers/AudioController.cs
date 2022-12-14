@@ -7,12 +7,12 @@ using System.Text.RegularExpressions;
 [Route("[controller]")]
 public class AudioController : ControllerBase
 {
-    private readonly ILogger<PhotoController> _logger;
+    private readonly ILogger<AudioController> _logger;
     private DB DB;
     private const string _storagePath = "./audio";
 
 
-    public AudioController(ILogger<PhotoController> logger)
+    public AudioController(ILogger<AudioController> logger)
     {
         _logger = logger;
         DB = new DB();
@@ -75,11 +75,11 @@ public class AudioController : ControllerBase
 
     // get all recordings
     [HttpGet("list")]
-    public IActionResult GetRecordings()
+    public IEnumerable<Recording> GetRecordings()
     {
         _logger.LogTrace("GetRecordings");
         var recordingInfos = DB.GetRecordings();
-        return Ok(recordingInfos);
+        return recordingInfos;
     }
 
     // delete recording
