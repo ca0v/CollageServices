@@ -147,23 +147,10 @@ public class DB
         }
     }
 
-    internal IEnumerable<CollageState> GetCollages()
+    internal IEnumerable<ImageRipper.Test.Collage> GetCollages()
     {
-        using (var connection = new SqliteConnection(connectionString))
-        {
-            connection.Open();
-            var select = connection.CreateCommand();
-            select.CommandText = "SELECT * FROM collages";
-            var reader = select.ExecuteReader();
-            var collages = new List<CollageState>();
-            while (reader.Read())
-            {
-                var collage = JsonConvert.DeserializeObject<CollageState>(reader.GetString(1));
-                if (collage is null) continue;
-                collages.Add(collage);
-            }
-            return collages;
-        }
+        var context = new ImageRipper.Test.PhotoContext();
+        return context.Collages.ToList();
     }
 
     internal void SaveRecording(string id, string title)
@@ -180,25 +167,10 @@ public class DB
         }
     }
 
-    internal IList<Recording> GetRecordings()
+    internal IList<ImageRipper.Test.Recording> GetRecordings()
     {
-        using (var connection = new SqliteConnection(connectionString))
-        {
-            connection.Open();
-            var select = connection.CreateCommand();
-            select.CommandText = "SELECT * FROM recordings";
-            var reader = select.ExecuteReader();
-            var recordings = new List<Recording>();
-            while (reader.Read())
-            {
-                recordings.Add(new Recording
-                {
-                    id = reader.GetString(0),
-                    title = reader.GetString(1)
-                });
-            }
-            return recordings;
-        }
+        var context = new ImageRipper.Test.PhotoContext();
+        return context.Recordings.ToList();
     }
 
     internal void DeleteRecording(string id)

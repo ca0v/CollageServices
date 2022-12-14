@@ -32,7 +32,7 @@ public class CollageController : ControllerBase
 
     // list all collage entries
     [HttpGet("list")]
-    public IEnumerable<CollageState> GetAllCollages()
+    public IEnumerable<ImageRipper.Test.Collage> GetAllCollages()
     {
         _logger.LogTrace("GetAllCollages");
         return DB.GetCollages();

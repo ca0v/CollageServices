@@ -75,7 +75,7 @@ public class AudioController : ControllerBase
 
     // get all recordings
     [HttpGet("list")]
-    public IEnumerable<Recording> GetRecordings()
+    public IEnumerable<ImageRipper.Test.Recording> GetRecordings()
     {
         _logger.LogTrace("GetRecordings");
         var recordingInfos = DB.GetRecordings();
