@@ -105,5 +105,24 @@ public class AudioController : ControllerBase
         System.IO.File.Delete(path);
         return Ok();
     }
+
+    // update an existing recording
+    [HttpPost("update")]
+    public IActionResult UpdateRecording(Recording recording)
+    {
+        _logger.LogTrace("UpdateRecording");
+
+        var id = recording.Id;
+        // id must contain only digits [0-9]
+        if (!Regex.IsMatch(id, @"^\d+$"))
+        {
+            _logger.LogError("Invalid id: {id}", id);
+            return BadRequest();
+        }
+
+        DB.UpdateRecording(id, recording);
+
+        return Ok();
+    }
 }
 

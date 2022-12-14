@@ -88,4 +88,15 @@ public class DB
         context.SaveChanges();
     }
 
+    internal void UpdateRecording(string id, Recording recording)
+    {
+        var context = new PhotoContext();
+        var existing = context.Recordings.Find(id);
+        if (existing == null)
+        {
+            throw new Exception($"Recording with id {id} not found");
+        }
+        existing.Title = recording.Title;
+        context.SaveChanges();
+    }
 }
