@@ -9,3 +9,5 @@ It is also used to presist audio recording and notes.
 ## Roadmap
 
 I do not expect this to have a very long future as I think it may be best to simply integrate with Google Photos directly.  I mostly created this to learn dotnet 7.
+
+ENH: Use EF to generate models

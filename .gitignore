@@ -1,5 +1,5 @@
 bin
 obj
-photo.sqlite
+*.sqlite
 CollageServices/photos
 CollageServices/audio
