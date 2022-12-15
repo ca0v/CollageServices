@@ -35,19 +35,7 @@ public class CollageController : ControllerBase
     public IEnumerable<CollageData> GetAllCollages()
     {
         _logger.LogTrace("GetAllCollages");
-        var data = DB.GetCollages();
-        return data.Select(d =>
-        {
-            var result = new CollageData() { Id = d.Id };
-            if (d.Data != null)
-            {
-                var data = JsonConvert.DeserializeObject<CollageData>(d.Data);
-                result.Title = data?.Title;
-                result.Note = data?.Note;
-                result.Data = data?.Data;
-            }
-            return result;
-        });
+        return DB.GetCollages();
     }
 
 }

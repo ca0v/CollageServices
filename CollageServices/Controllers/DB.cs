@@ -9,6 +9,8 @@ public class DB
         var existing = context.Collages.Find(collage.Id);
         if (existing != null)
         {
+            existing.Note = collage.Note;
+            existing.Title = collage.Title;
             existing.Data = collage.Data;
             context.Collages.Update(existing);
         }
@@ -55,10 +57,21 @@ public class DB
         context.SaveChanges();
     }
 
-    internal IEnumerable<Collage> GetCollages()
+    internal IEnumerable<CollageData> GetCollages()
     {
         var context = new PhotoContext();
-        return context.Collages.ToList();
+        return context.Collages.ToList()
+            .Select(c =>
+            {
+                var result = new CollageData
+                {
+                    Id = c.Id,
+                    Title = c.Title,
+                    Note = c.Note,
+                    Data = Newtonsoft.Json.JsonConvert.DeserializeObject<CollageCellState[]>(c.Data ?? "[]"),
+                };
+                return result;
+            });
     }
 
     internal void SaveRecording(string id, string title)

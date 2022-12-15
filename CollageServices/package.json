@@ -1,0 +1,12 @@
+{
+    "name": "collageservices",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "update-database": "dotnet ef database update"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+}
