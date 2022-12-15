@@ -2,21 +2,37 @@ namespace ImageRipper;
 
 public class DB
 {
-    public void SaveCollage(Collage collage)
+    public void SaveCollage(CollageData collage)
     {
         var context = new PhotoContext();
+
+        // the id must be characters and numbers only
+        if (collage.Id == null)
+        {
+            throw new Exception("Id is required");
+        }
+        if (!System.Text.RegularExpressions.Regex.IsMatch(collage.Id, "^[a-zA-Z0-9-/.]+$"))
+        {
+            throw new Exception("Invalid id");
+        }
         // if the collage already exists, update it otherwise add it
         var existing = context.Collages.Find(collage.Id);
         if (existing != null)
         {
             existing.Note = collage.Note;
             existing.Title = collage.Title;
-            existing.Data = collage.Data;
+            existing.Data = Newtonsoft.Json.JsonConvert.SerializeObject(collage.Data);
             context.Collages.Update(existing);
         }
         else
         {
-            context.Collages.Add(collage);
+            context.Collages.Add(new Collage()
+            {
+                Id = collage.Id,
+                Note = collage.Note,
+                Title = collage.Title,
+                Data = Newtonsoft.Json.JsonConvert.SerializeObject(collage.Data),
+            });
         }
         context.SaveChanges();
     }
