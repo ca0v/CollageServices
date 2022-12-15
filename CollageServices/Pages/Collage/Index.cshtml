@@ -2,35 +2,52 @@
 @model IndexModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-<h1>Collage Summary Page</h1>
+<link rel="stylesheet" href="https://unpkg.com/@@picocss/pico@latest/css/pico.min.css"/>
 
-<a asp-page="./Create">Create New</a>
+<main class="container">
+    <h1>Collage Summary Page</h1>
 
-@if (Model.Collages != null)
-{
+    <div class="toolbar">
+        <a asp-page="./Create" class="secondary" role="button">Create New</a>
+    </div>
     <p>@Model.Collages.Count() Collages found</p>
 
-    foreach (var collage in Model.Collages)
+    @if (Model.Collages != null)
     {
-        <div class="card">
-            <h2><a asp-page="./Edit" asp-route-id="@collage.Id">@collage.Title</a></h2>
-            <textarea>@collage.Note</textarea>
-        </div>
+        foreach (var collage in Model.Collages)
+        {
+            <article>
+                <h3><a asp-page="./Edit" asp-route-id="@collage.Id">@collage.Title</a></h3>
+                <p>@collage.Note</p>
+                <code>@collage.Data</code>
+            </article>
+        }
+
+
     }
-}
+</main>
 
 <style>
+    code {
+        height: 5rem;
+        width: 100%;
+        overflow: auto;
+    }
     .card {
         display: grid;
         grid-template-columns: 1fr;
-        padding: 10px;
-        margin: 10px;
     }
 
     .card > textarea {
         height: 100px;
         resize: none;
-        color: green;
+    }
+
+    .toolbar {
+        display: flex;
+        flex-direction: row-reverse;
+        gap: 1rem;
+        padding: 1rem;
     }
 </style>
 
