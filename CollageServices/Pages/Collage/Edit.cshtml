@@ -47,33 +47,33 @@
 
 
 <main>
-<h1>Editing @Model.Collage.Title</h1>
+    <h1>Editing @Model.Collage.Title</h1>
 
-<div class="container">
-    <div class="card">
-        <form method="post">
-            <input type="hidden" asp-for="@Model.Collage.Id" />
-            <div class="form-group col1-2">
-                <label asp-for="@Model.Collage.Title">Title</label>
-                <input asp-for="@Model.Collage.Title" class="form-control" placeholder="Title" />
-            </div>
-            <div class="form-group col1-2">
-                <label asp-for="@Model.Collage.Note">Note</label>
-                <textarea asp-for="@Model.Collage.Note" class="form-control note" placeholder="Note"></textarea>
-            </div>
-            <div class="form-group col1-2">
-                <label asp-for="@Model.Collage.Data">Data</label>
-                <textarea asp-for="@Model.Collage.Data" readonly class="form-control" placeholder="Data (created using another tool)"></textarea>
-            </div>
-            <div class="toolbar">
-                <input type="submit" class="btn" value="Save Edits" />
-                <input type="button" class="btn secondary" value="Cancel" onclick="location='../index'" />
-                <input type="submit" class="btn secondary delete" value="Delete" asp-page-handler="delete" />
-            </div>
-        </form>
+    <div class="container">
+        <div class="card">
+            <form method="post">
+                <input type="hidden" asp-for="@Model.Collage.Id" />
+                <div class="form-group col1-2">
+                    <label asp-for="@Model.Collage.Title">Title</label>
+                    <input asp-for="@Model.Collage.Title" class="form-control" placeholder="Title" />
+                </div>
+                <div class="form-group col1-2">
+                    <label asp-for="@Model.Collage.Note">Note</label>
+                    <textarea asp-for="@Model.Collage.Note" class="form-control note" placeholder="Note"></textarea>
+                </div>
+                <div class="form-group col1-2">
+                    <label asp-for="@Model.Collage.Data">Data</label>
+                    <textarea asp-for="@Model.Collage.Data" readonly class="form-control"
+                        placeholder="Data (created using another tool)"></textarea>
+                </div>
+                <div class="toolbar">
+                    <input type="submit" class="btn" value="Save Edits" />
+                    <input type="button" class="btn secondary" value="Cancel" onclick="location='../index'" />
+                    <input type="submit" class="btn secondary delete" value="Delete" asp-page-handler="delete" />
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 </main>
 
 <script src="/_framework/aspnetcore-browser-refresh.js"></script>
-

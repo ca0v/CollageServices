@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 
 builder.Services.AddDbContext<ImageRipper.PhotoContext>();
-    
+
 builder.Services.AddControllers();
 
 builder.Services.AddCors();
@@ -19,8 +20,14 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.MapRazorPages();
 }
+
+app.MapRazorPages();
+app.UseStaticFiles(new StaticFileOptions()
+{
+    FileProvider = new PhysicalFileProvider("/home/ca0v/code/ca0v/svelte-lab/dist"),
+    RequestPath = new PathString("/svelte-lab"),
+});
 
 // read "AllowedOrigins" from appsettings.json
 var origins = builder.Configuration.GetValue<string>("AllowedOrigins")?.Split(';');

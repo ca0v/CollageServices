@@ -10,7 +10,12 @@ It is also used to presist audio recording and notes.
 
 I do not expect this to have a very long future as I think it may be best to simply integrate with Google Photos directly.  I mostly created this to learn dotnet 7.
 
-ENH: Use EF to generate models
+## Up Next
+
+* How to embed static sites, like the svelte_lab, in this server, which can now perform UX CRUD on the photo.sqlite.
+
+## Other Notes
+
 >dotnet ef dbcontext scaffold "Data Source=../photo.sqlite" Microsoft.EntityFrameworkCore.Sqlite -o Test -c PhotoContext
 >dotnet user-secrets init
 >dotnet user-secrets set ConnectionStrings:PhotoDatabase "Data Source=photo.sqlite"
