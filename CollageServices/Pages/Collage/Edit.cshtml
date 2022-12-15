@@ -39,6 +39,10 @@
         display: flex;
         gap: 1rem;
     }
+
+    input.delete {
+        background-color: red;
+    }
 </style>
 
 
@@ -64,6 +68,7 @@
             <div class="toolbar">
                 <input type="submit" class="btn" value="Save Edits" />
                 <input type="button" class="btn secondary" value="Cancel" onclick="location='../index'" />
+                <input type="submit" class="btn secondary delete" value="Delete" asp-page-handler="delete" />
             </div>
         </form>
     </div>
@@ -71,3 +76,4 @@
 </main>
 
 <script src="/_framework/aspnetcore-browser-refresh.js"></script>
+

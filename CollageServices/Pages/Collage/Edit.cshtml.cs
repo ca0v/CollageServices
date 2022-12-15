@@ -40,4 +40,23 @@ public class EditModel : PageModel
         return RedirectToPage("/Collage/Edit", new { id = Collage.Id });
     }
 
+    public IActionResult OnPostDelete()
+    {
+        if (Collage is null)
+        {
+            return NotFound();
+        }
+
+        var original = _context.Collages?.Find(Collage.Id);
+        if (original is null)
+        {
+            return NotFound();
+        }
+
+        _context.Collages?.Remove(original);
+        _context.SaveChanges();
+
+        return RedirectToPage("/Collage/Index");
+    }
+
 }

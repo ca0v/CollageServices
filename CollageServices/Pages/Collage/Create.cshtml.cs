@@ -28,6 +28,15 @@ public class CollagePageModel : PageModel
 
     public IActionResult OnPost()
     {
+        if (Collage == null)
+        {
+            return Page();
+        }
+
+        Collage.Id = System.Guid.NewGuid().ToString();
+        _context.Collages.Add(Collage);
+        _context.SaveChanges();
+
         return RedirectToPage("./Index");
     }
 }
