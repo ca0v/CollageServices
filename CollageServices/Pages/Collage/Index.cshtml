@@ -2,45 +2,43 @@
 @model IndexModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
+<title>Collage Summary Page</title>
 <link rel="stylesheet" href="https://unpkg.com/@@picocss/pico@latest/css/pico.min.css"/>
 
-<main class="container">
-    <h1>Collage Summary Page</h1>
-
-    <div class="toolbar">
-        <a asp-page="./Create" class="secondary" role="button">Create New</a>
-    </div>
-    <p>@Model.Collages.Count() Collages found</p>
-
-    @if (Model.Collages != null)
-    {
-        foreach (var collage in Model.Collages)
-        {
-            <article>
-                <h3><a asp-page="./Edit" asp-route-id="@collage.Id">@collage.Title</a></h3>
-                <p>@collage.Note</p>
-                <code>@collage.Data</code>
-            </article>
-        }
-
-
-    }
-</main>
-
 <style>
-    code {
-        height: 5rem;
+
+    h1 {
+        text-align: center;
+    }
+    
+    .main {
+        margin: 2rem;
+        padding: 2rem;
+    }
+
+    .card {
+        margin: var(--block-spacing-vertical) 0;
+        padding: var(--block-spacing-vertical) var(--block-spacing-horizontal);
+        padding-bottom: 0;
+        background-color: var(--card-background-color);
+        border-radius: var(--border-radius);
+        border: 1px solid;
+        border-color: var(--muted-border-color);
+    }
+
+    .note {
+        height: 6rem;
         width: 100%;
         overflow: auto;
-    }
-    .card {
-        display: grid;
-        grid-template-columns: 1fr;
+        border: 1px solid;
+        border-color: var(--muted-border-color);
+        padding: 0.1rem;
     }
 
-    .card > textarea {
-        height: 100px;
-        resize: none;
+    .grid-auto {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, 20rem);
+        column-gap: 1rem;
     }
 
     .toolbar {
@@ -49,6 +47,36 @@
         gap: 1rem;
         padding: 1rem;
     }
+
+    .align-items-right {
+        display: grid;
+        /* align the items to the left edge */
+        justify-items: end;
+    }
 </style>
+
+<div class="main">
+    <h1>Collage Summary Page</h1>
+
+    <div class="toolbar">
+        <div class="align-items-right">
+            <a asp-page="./Create" class="secondary" role="button">Create New</a>
+            <p>@Model.Collages.Count() items found</p>
+        </div>
+    </div>
+
+    <div class="grid-auto">
+        @if (Model.Collages != null)
+        {
+            foreach (var collage in Model.Collages)
+            {
+                <div class="card">
+                    <h6><a asp-page="./Edit" asp-route-id="@collage.Id">@collage.Title</a></h6>
+                    <p class="note">@collage.Note</p>
+                </div>
+            }
+        }
+    </div>
+</div>
 
 <script src="/_framework/aspnetcore-browser-refresh.js"></script>
