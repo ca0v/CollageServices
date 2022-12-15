@@ -4,7 +4,9 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "update-database": "dotnet ef database update"
+        "update-database": "dotnet ef database update",
+        "update-controller": "dotnet aspnet-codegenerator controller -name ImageRipperController -async -api -outDir Controllers -dc ImageRipper.PhotoContext -m ImageRipper.Collage -f",
+        "update-view": "dotnet aspnet-codegenerator view ImageRipperView List -outDir Views -dc ImageRipper.PhotoContext -m ImageRipper.Collage -f"
     },
     "keywords": [],
     "author": "",

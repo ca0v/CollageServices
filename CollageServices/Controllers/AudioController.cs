@@ -69,7 +69,7 @@ public class AudioController : ControllerBase
         }
 
         var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-        return File(stream, "audio/ogg; codecs=opus");
+        return (File(stream, "audio/ogg; codecs=opus"));
     }
 
     // get all recordings

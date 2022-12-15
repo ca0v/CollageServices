@@ -1,0 +1,19 @@
+@page
+@model CollagePageModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ImageRipperView</title>
+</head>
+<body>
+
+    <form method="post">
+    <input asp-for="Collage!.Title" placeholder="Title"/>
+        <input type="submit" value="Save" />
+    </form>
+</body>
+</html>
