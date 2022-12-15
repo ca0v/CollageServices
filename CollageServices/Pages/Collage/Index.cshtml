@@ -2,10 +2,9 @@
 @model IndexModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-<h1>Got it</h1>
+<h1>Collage Summary Page</h1>
 
-<a href="./Create">Create New</a>
-<a href="./List">See All</a>
+<a asp-page="./Create">Create New</a>
 
 @if (Model.Collages != null)
 {
@@ -24,7 +23,6 @@
     .card {
         display: grid;
         grid-template-columns: 1fr;
-        border: 1px solid black;
         padding: 10px;
         margin: 10px;
     }
@@ -35,3 +33,5 @@
         color: green;
     }
 </style>
+
+<script src="/_framework/aspnetcore-browser-refresh.js"></script>

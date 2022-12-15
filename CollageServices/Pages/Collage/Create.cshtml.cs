@@ -16,6 +16,7 @@ public class CollagePageModel: PageModel
     public IActionResult OnGet()
     {
         Collage = new ImageRipper.Collage() {
+            Id = "PRACTICE_MODE",
             Title = "Title",
             Note = "Note",
             Data = "Data"
@@ -26,13 +27,6 @@ public class CollagePageModel: PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        if (!ModelState.IsValid)
-        {
-            return Page();
-        }
-
-        await _context.Collages.AddAsync(Collage);
-
         return RedirectToPage("./Index");
     }
 }

@@ -11,9 +11,72 @@
 </head>
 <body>
 
-    <form method="post">
+<form method="post">
+    <div></div>
+    <h1>Create Collage</h1>
+    <h3>Title</h3>
     <input asp-for="Collage!.Title" placeholder="Title"/>
+    <h3>Note</h3>
+    <textarea asp-for="Collage!.Note" placeholder="Note"></textarea>
+    <div class="toolbar">
         <input type="submit" value="Save" />
-    </form>
+        <input class="cancel" type="button" value="Cancel" />
+    </div>
+</form>
+
+
 </body>
 </html>
+
+
+<style>
+    form {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-template-rows: 5rem 2rem 10rem;
+        row-gap: 1rem;
+        width: clamp(320px, 90vw, 1024px);
+        margin: 0 auto;
+    }
+
+    form > input, form > textarea {
+        border-style: solid;
+        padding: 0.5rem;
+        color: green;
+        resize: none;
+    }
+
+    form > h3 {
+        margin-right: 2rem;
+        text-align: left;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    .toolbar {
+        grid-column-start: 2;
+        display: flex;
+        flex-direction: row-reverse;
+        gap: 1rem;
+    }
+
+    .toolbar > input[type=submit] {
+        padding: 0.5rem;
+        border-style: solid;
+        border-radius: 0.5rem;
+        background-color: green;
+        color: white;
+    }
+
+    .toolbar > .cancel {
+        padding: 0.5rem;
+        border-style: solid;
+        border-radius: 0.5rem;
+        background-color: red;
+        color: white;
+    }
+</style>
+
+<script src="/_framework/aspnetcore-browser-refresh.js"></script>

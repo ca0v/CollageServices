@@ -4,3 +4,40 @@
 <h1>Edit Collage</h1>
 
 <h2>Collage Title Is @Model.Collage.Title</h2>
+
+<div class="card">
+    <p>Title</p>
+    <input placeholder="Title" value="@Model.Collage.Title" />
+    <p>Note</p>
+    <textarea placeholder="Notes">@Model.Collage.Note</textarea>
+    <p>Data</p>
+    <p>@Model.Collage.Data</p>
+</div>
+
+<style>
+    .card {
+        display: grid;
+        grid-template-columns: 10rem 1fr;
+        grid-template-rows: 1fr 2fr;
+        row-gap: 1rem;
+        border: 1px solid black;
+        padding: 10px;
+        margin: 10px;
+    }
+
+    .card > input,
+    .card > textarea {
+        color: green;
+        border-style: solid;
+        resize: none;
+        padding: 0.5rem;
+    }
+
+    .card > p {
+        overflow: hidden;
+        overflow-y: auto;
+        max-height: 50vh;
+    }
+</style>
+
+<script src="/_framework/aspnetcore-browser-refresh.js"></script>
