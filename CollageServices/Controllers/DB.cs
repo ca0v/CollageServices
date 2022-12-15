@@ -1,6 +1,4 @@
 namespace ImageRipper;
-using Microsoft.Data.Sqlite;
-using Newtonsoft.Json;
 
 public class DB
 {
@@ -11,7 +9,8 @@ public class DB
         var existing = context.Collages.Find(collage.Id);
         if (existing != null)
         {
-            context.Collages.Update(collage);
+            existing.Data = collage.Data;
+            context.Collages.Update(existing);
         }
         else
         {
