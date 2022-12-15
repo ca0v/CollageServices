@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-public class EditModel: PageModel
+public class EditModel : PageModel
 {
     [BindProperty]
     public ImageRipper.Collage? Collage { get; set; }
@@ -15,7 +15,7 @@ public class EditModel: PageModel
 
     public void OnGet(string id)
     {
-        Collage = _context.Collages.Find(id);
+        Collage = _context.Collages?.Find(id);
     }
 
 }

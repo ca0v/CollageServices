@@ -8,6 +8,7 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>ImageRipperView</title>
+    <link rel="stylesheet" href="https://unpkg.com/@@picocss/pico@latest/css/pico.min.css"/>
 </head>
 <body>
 
@@ -19,8 +20,8 @@
     <h3>Note</h3>
     <textarea asp-for="Collage!.Note" placeholder="Note"></textarea>
     <div class="toolbar">
-        <input type="submit" value="Save" />
-        <input class="cancel" type="button" value="Cancel" />
+        <input type="submit" value="Create New" class="btn" />
+        <input type="button" value="Cancel" class="btn secondary" onclick="location='./index'"/>
     </div>
 </form>
 
@@ -58,25 +59,10 @@
     .toolbar {
         grid-column-start: 2;
         display: flex;
-        flex-direction: row-reverse;
+        flex-direction: row;
         gap: 1rem;
     }
 
-    .toolbar > input[type=submit] {
-        padding: 0.5rem;
-        border-style: solid;
-        border-radius: 0.5rem;
-        background-color: green;
-        color: white;
-    }
-
-    .toolbar > .cancel {
-        padding: 0.5rem;
-        border-style: solid;
-        border-radius: 0.5rem;
-        background-color: red;
-        color: white;
-    }
 </style>
 
 <script src="/_framework/aspnetcore-browser-refresh.js"></script>

@@ -16,17 +16,17 @@ public class DB
             throw new Exception("Invalid id");
         }
         // if the collage already exists, update it otherwise add it
-        var existing = context.Collages.Find(collage.Id);
+        var existing = context.Collages?.Find(collage.Id);
         if (existing != null)
         {
             existing.Note = collage.Note;
             existing.Title = collage.Title;
             existing.Data = Newtonsoft.Json.JsonConvert.SerializeObject(collage.Data);
-            context.Collages.Update(existing);
+            context.Collages?.Update(existing);
         }
         else
         {
-            context.Collages.Add(new Collage()
+            context.Collages?.Add(new Collage()
             {
                 Id = collage.Id,
                 Note = collage.Note,
@@ -40,20 +40,20 @@ public class DB
     public void SavePhoto(Photo photo)
     {
         var context = new PhotoContext();
-        context.Photos.Add(photo);
+        context.Photos!.Add(photo);
         context.SaveChanges();
     }
 
     public IEnumerable<Photo> GetPhotoInfos()
     {
         var context = new PhotoContext();
-        return context.Photos.ToList();
+        return context.Photos!.ToList();
     }
 
     public Photo GetPhotoInfo(string id)
     {
         var context = new PhotoContext();
-        var photo = context.Photos.Find(id);
+        var photo = context.Photos!.Find(id);
         if (photo == null)
         {
             throw new Exception($"Photo with id {id} not found");

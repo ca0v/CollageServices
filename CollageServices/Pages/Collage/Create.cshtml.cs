@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-public class CollagePageModel: PageModel
+public class CollagePageModel : PageModel
 {
     private readonly ImageRipper.PhotoContext _context;
 
@@ -15,7 +15,8 @@ public class CollagePageModel: PageModel
 
     public IActionResult OnGet()
     {
-        Collage = new ImageRipper.Collage() {
+        Collage = new ImageRipper.Collage()
+        {
             Id = "PRACTICE_MODE",
             Title = "Title",
             Note = "Note",
@@ -25,7 +26,7 @@ public class CollagePageModel: PageModel
     }
 
 
-    public async Task<IActionResult> OnPostAsync()
+    public IActionResult OnPost()
     {
         return RedirectToPage("./Index");
     }

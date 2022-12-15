@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-public class IndexModel: PageModel
+public class IndexModel : PageModel
 {
     private readonly ImageRipper.PhotoContext _context;
 
-    public IList<ImageRipper.Collage> Collages { get; set; }
+    public IList<ImageRipper.Collage>? Collages { get; set; }
 
     public IndexModel(ImageRipper.PhotoContext context)
     {
@@ -14,7 +14,7 @@ public class IndexModel: PageModel
 
     public void OnGet()
     {
-        Collages = _context.Collages.ToList();
+        Collages = _context.Collages?.ToList();
     }
 
 }
