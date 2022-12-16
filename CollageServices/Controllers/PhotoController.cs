@@ -25,7 +25,20 @@ public partial class PhotoController : ControllerBase
     public IEnumerable<Photo> GetAllPhotos()
     {
         _logger.LogTrace("GetAllPhotos");
-        return DB.GetPhotoInfos();
+        var photoInfos = DB.GetPhotoInfos();
+        foreach (var photoInfo in photoInfos)
+        {
+            if (photoInfo.Filename == null)
+            {
+                photoInfo.Cached = false;
+            }
+            else
+            {
+                var path = Path.Combine(_storagePath, photoInfo.Filename);
+                photoInfo.Cached = System.IO.File.Exists(path);
+            }
+        }
+        return photoInfos;
     }
 
     // download the image url posted to this function
@@ -57,48 +70,47 @@ public partial class PhotoController : ControllerBase
             return BadRequest();
         }
 
-        // make sure the image doesn't already exist
+        // if the image does not exist, save it now, it will fail if file already exists
         try
         {
-            var photo = DB.GetPhotoInfo(id);
-            _logger.LogError("Photo already exists: {id}", id);
-            return BadRequest();
+            await SaveImage(filename, url);
+            _logger.LogTrace("Saved image: {filename}", filename);
         }
         catch (Exception e)
         {
-            _logger.LogTrace(e, "SavePhoto");
-        }
-
-        // save the image
-        try
-        {
-            var client = new HttpClient();
-            var response = await client.GetAsync(url);
-            var bytes = await response.Content.ReadAsByteArrayAsync();
-            // the client should not be controlling the file name but wanting to keep it 1-1 with the google for now
-            var fullPath = Path.Combine(_storagePath, filename);
-            await System.IO.File.WriteAllBytesAsync(fullPath, bytes);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "SavePhoto");
+            _logger.LogError("Failed to save image: {filename} {error}", filename, e.Message);
             return BadRequest();
         }
 
-
-        // save the image info
+        // save the image info, it will fail if already exists
         try
         {
             DB.SavePhoto(new Photo { Id = id, Filename = filename, Created = created, Width = width, Height = height });
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            _logger.LogError(e, "SavePhoto");
-            return BadRequest();
+            _logger.LogError("Failed to save photo info: {id}", id);
+            // still ok because the image was missing and now it has been saved
+            return Ok();
+
         }
 
         // return the image info
         return Ok();
+    }
+
+    private static async Task SaveImage(string filename, string url)
+    {
+        var fullPath = Path.Combine(_storagePath, filename);
+        if (System.IO.File.Exists(fullPath))
+        {
+            throw new Exception("File already exists: " + fullPath);
+        }
+        var client = new HttpClient();
+        var response = await client.GetAsync(url);
+        var bytes = await response.Content.ReadAsByteArrayAsync();
+        // the client should not be controlling the file name but wanting to keep it 1-1 with the google for now
+        await System.IO.File.WriteAllBytesAsync(fullPath, bytes);
     }
 
 

@@ -40,6 +40,7 @@ public class DB
     public void SavePhoto(Photo photo)
     {
         var context = new PhotoContext();
+        var existingPhoto = context.Photos!.Find(photo.Id);
         context.Photos!.Add(photo);
         context.SaveChanges();
     }

@@ -12,7 +12,8 @@ I do not expect this to have a very long future as I think it may be best to sim
 
 ## Up Next
 
-* How to embed static sites, like the svelte_lab, in this server, which can now perform UX CRUD on the photo.sqlite.
+* pull and build svelte-lab locally
+* pull missing images from google photos (1024 wide, max size)
 
 ## Other Notes
 
@@ -23,3 +24,8 @@ I do not expect this to have a very long future as I think it may be best to sim
 >"Name=ConnectionStrings:PhotoDatabase"
 
     System.InvalidOperationException: A named connection string was used, but the name 'ConnectionStrings:PhotoDatabase' was not found in the application's configuration. Note that named connection strings are only supported when using 'IConfiguration' and a service provider, such as in a typical ASP.NET Core application. See https://go.microsoft.com/fwlink/?linkid=850912 for more information.
+
+### 2022.12.15
+
+Today I learned how to build migrations to perform database upgrades, found #dotnet `aspnet-codegenerator` and generated views and controllers from #entityframework contexts, added #razor pages for simple crud ops and static pages to serve the #svelte based collage builder.
+Although I was not thrilled with #blazor, #razor has strong appeal.

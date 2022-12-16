@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ImageRipper;
 
@@ -14,4 +13,7 @@ public partial class Photo
     public long? Width { get; set; }
 
     public long? Height { get; set; }
+
+    [NotMapped]
+    public bool? Cached { get; set; } = false;
 }
