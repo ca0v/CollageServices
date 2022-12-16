@@ -1,41 +1,33 @@
+<!DOCTYPE html>
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <title>My first three.js app</title>
-    <style>
-        body {
-            margin: 0;
-        }
-
-        canvas {
-            width: 100%;
-            height: 100%
-        }
-    </style>
+    <title>My App</title>
+    <!-- use pico css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/picocss/1.5.6/pico.classless.css"
+        integrity="sha512-uow+I0L1B/RoWZH2qRrevzc1ANjXDZe02Pvzg3i34aj7esX9ijRw4z6m933IC9cdqcSL5v6gFc0i3HmZeuksKA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r84/three.min.js"></script>
-    <script>
-        var scene = new THREE.Scene();
-        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        var renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
-        var geometry = new THREE.BoxGeometry(1, 1, 1);
-        var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        var cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
-        camera.position.z = 5;
-        var animate = function () {
-            requestAnimationFrame(animate);
-            cube.rotation.x += 0.1;
-            cube.rotation.y += 0.1;
-            renderer.render(scene, camera);
-        };
-        animate();
-    </script>
+    <main>
+        <h1>Collage Builder</h1>
+        <div class="grid">
+            <a href="./svelte-lab/index.html"><mark>Svelte Lab</mark></a>
+            <a href="./collage-builder/index.html">Collage Builder</a>
+            <a href="./photo/list">List all photos (json)</a>
+            <a href="./collage/list">List all collages (json)</a>
+            <a href="./audio/list">List all audio recordings (json)</a>
+            <a href="./collage/">List all collages (html)</a>
+        </div>
+    </main>
 </body>
+
+<style>
+    .grid {
+        display: flex;
+        gap: 1rem;
+    }
+</style>
 
 </html>

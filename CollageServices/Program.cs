@@ -23,10 +23,20 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapRazorPages();
+
+// serve static files from wwwroot
+app.UseStaticFiles();
+
 app.UseStaticFiles(new StaticFileOptions()
 {
     FileProvider = new PhysicalFileProvider("/home/ca0v/code/ca0v/svelte-lab/dist"),
     RequestPath = new PathString("/svelte-lab"),
+});
+
+app.UseStaticFiles(new StaticFileOptions()
+{
+    FileProvider = new PhysicalFileProvider("/home/ca0v/code/corey-alix/collage-builder/dist"),
+    RequestPath = new PathString("/collage-builder"),
 });
 
 // read "AllowedOrigins" from appsettings.json
