@@ -76,4 +76,13 @@
     </div>
 </main>
 
+<script>
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "s" && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+            e.preventDefault();
+            document.querySelector("input[type=submit]").click();
+        }
+    }, false);
+</script>
+
 <script src="/_framework/aspnetcore-browser-refresh.js"></script>

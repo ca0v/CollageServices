@@ -3,3 +3,4 @@ obj
 *.sqlite
 CollageServices/photos
 CollageServices/audio
+node_modules

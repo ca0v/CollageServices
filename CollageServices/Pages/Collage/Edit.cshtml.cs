@@ -37,7 +37,7 @@ public class EditModel : PageModel
         _context.Collages?.Update(original);
         _context.SaveChanges();
 
-        return RedirectToPage("/Collage/Edit", new { id = Collage.Id });
+        return RedirectToPage("/Collage/index");
     }
 
     public IActionResult OnPostDelete()
