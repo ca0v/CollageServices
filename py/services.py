@@ -10,8 +10,8 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 
 
-class NameForm(FlaskForm):
-    name = StringField('Which actor is your favorite?',
+class UserSummaryForm(FlaskForm):
+    name = StringField('Provide your email address:',
                        validators=[DataRequired()])
     submit = SubmitField('Submit')
 
@@ -33,24 +33,32 @@ db = SQLAlchemy(app)
 
 
 @app.route('/', methods=['GET', 'POST'])
-def index():
+def home():
     users = User.query.all()
-    form = NameForm()
+    form = UserSummaryForm()
     message = ""
     if form.validate_on_submit():
-        name = form.name.data
-        message = f"Hello {name}"
+        userEmail = form.name.data
+        user = User(email=userEmail)
+        db.session.add(user)
+        db.session.commit()
+        message = "User added successfully"
+        return redirect(url_for('home'))
     return render_template('index.html', users=users, form=form, message=message)
 
 
 @dataclass
 class User(db.Model):
     __tablename__ = "users"
+
     id: int
     email: str
 
     id = db.Column(db.Integer, primary_key=True, auto_increment=True)
     email = db.Column(db.String(200), unique=False)
+
+    def __repr__(self):
+        return f"User('{self.id}', '{self.email}')"
 
 
 @ app.route('/users/')
@@ -71,6 +79,15 @@ def delete_user(id):
     db.session.delete(user)
     db.session.commit()
     return jsonify(user)
+
+
+@ app.route('/users/delete/', methods=['POST'])
+def post_delete_user():
+    id = request.form.get("id")
+    user = User.query.filter_by(id=id).first()
+    db.session.delete(user)
+    db.session.commit()
+    return redirect(url_for('home'))
 
 
 @ app.route('/users/', methods=['POST'])

@@ -19,33 +19,38 @@ Best Movie Actors
 {% block content %}
 
 <div class="container">
-    <script>
-        async function deleteUser(userId) {
-            const response = await fetch(`/users/${userId}`, {
-                method: 'DELETE',
-            });
-            if (response.ok) {
-                window.location.reload();
-            }
-        }
-    </script>
     <div class="row">
         <div class="col-md-10 col-lg-8 mx-lg-auto mx-md-auto">
 
-            <h1 class="pt-5 pb-2">Welcome to the best movie actors Flask example!</h1>
+            <h1 class="pt-5 pb-2">Python Web API Playground</h1>
 
-            <p class="lead">This is the index page for an example Flask app using Bootstrap and WTForms. Note that only
-                100 actors are in the data source. Partial names are not valid.</p>
+            <p class="lead">This is the index page for an example Flask app using Bootstrap and WTForms.</p>
 
+            <h2>Creation Form</h2>
             {{ wtf.quick_form(form) }}
-            {% for user in users %}
-            <button onclick="deleteUser('{{ user.id }}')">Delete {{user.id}}</button>
-            {% endfor %}
 
-            <p class="pt-5"><strong>{{ message }}</strong></p>
-
+            {% if users %}
+            <h2>Deletion Form</h2>
+            <form class="form" method="POST" action="./users/delete">
+                <div class="form-group">
+                    <label for="id">Select a user to delete</label>
+                    <select class="form-control" name="id">
+                        {% for user in users %}
+                        <option type="checkbox" value="{{user.id}}">{{user.email}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button class="btn btn-secondary" type="submit">Delete</button>
+            </form>
+            {% endif %}
         </div>
     </div>
 </div>
+
+<style>
+    .form {
+        margin-bottom: 1rem;
+    }
+</style>
 
 {% endblock %}
