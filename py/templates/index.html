@@ -12,7 +12,7 @@
 
 
 {% block title %}
-Best Movie Actors
+Just.Be.Collage Web API
 {% endblock %}
 
 
@@ -21,36 +21,12 @@ Best Movie Actors
 <div class="container">
     <div class="row">
         <div class="col-md-10 col-lg-8 mx-lg-auto mx-md-auto">
-
-            <h1 class="pt-5 pb-2">Python Web API Playground</h1>
-
-            <p class="lead">This is the index page for an example Flask app using Bootstrap and WTForms.</p>
-
-            <h2>Creation Form</h2>
-            {{ wtf.quick_form(form) }}
-
-            {% if users %}
-            <h2>Deletion Form</h2>
-            <form class="form" method="POST" action="./users/delete">
-                <div class="form-group">
-                    <label for="id">Select a user to delete</label>
-                    <select class="form-control" name="id">
-                        {% for user in users %}
-                        <option type="checkbox" value="{{user.id}}">{{user.email}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <button class="btn btn-secondary" type="submit">Delete</button>
-            </form>
-            {% endif %}
+            <h1 class="pt-5 pb-2">Just.Be.Collage Web API</h1>
+            <p class="lead">UX for the Web API</p>
+            <a href="./collage">List all collages</a>
+            <a href="./collage.html">Collage UX</a>
         </div>
     </div>
 </div>
-
-<style>
-    .form {
-        margin-bottom: 1rem;
-    }
-</style>
 
 {% endblock %}

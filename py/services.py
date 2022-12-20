@@ -1,3 +1,4 @@
+import json
 from flask_sqlalchemy import SQLAlchemy
 from dataclasses import dataclass
 from flask_restful import Api
@@ -9,18 +10,11 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 
-
-class UserSummaryForm(FlaskForm):
-    name = StringField('Provide your email address:',
-                       validators=[DataRequired()])
-    submit = SubmitField('Submit')
-
-
 # start a webapi
 app = Flask(__name__)
 
 # Flask-WTF requires an encryption key - the string can be anything
-app.config['SECRET_KEY'] = 'C2HWGVoMGfNTBsrYQg8EcMrdTimkZfAb'
+app.config['SECRET_KEY'] = "fdd89hf3809fdjkhidf409ruvn-0q325873-4 hfg"
 
 # Flask-Bootstrap requires this line
 Bootstrap(app)
@@ -33,77 +27,76 @@ db = SQLAlchemy(app)
 
 
 @app.route('/', methods=['GET', 'POST'])
-def home():
-    users = User.query.all()
-    form = UserSummaryForm()
-    message = ""
-    if form.validate_on_submit():
-        userEmail = form.name.data
-        user = User(email=userEmail)
-        db.session.add(user)
+def index_ux():
+    return render_template('index.html')
+
+
+@app.route('/collage.html', methods=['GET', 'POST'])
+def collage_ux():
+    if request.method == 'POST':
+
+        # get the data from the form
+        id = request.form['id']
+        note = request.form['note']
+        title = request.form['title']
+
+        collage = Collage(id=id, note=note, title=title)
+        db.session.add(collage)
         db.session.commit()
-        message = "User added successfully"
-        return redirect(url_for('home'))
-    return render_template('index.html', users=users, form=form, message=message)
+    return render_template('collage.html')
 
 
 @dataclass
-class User(db.Model):
-    __tablename__ = "users"
+class Collage(db.Model):
+    __tablename__ = "collages"
 
-    id: int
-    email: str
+    id: str
+    data: str
+    note: str
+    title: str
 
-    id = db.Column(db.Integer, primary_key=True, auto_increment=True)
-    email = db.Column(db.String(200), unique=False)
-
-    def __repr__(self):
-        return f"User('{self.id}', '{self.email}')"
-
-
-@ app.route('/users/')
-def users():
-    users = User.query.all()
-    return jsonify(users)
+    id = db.Column(db.Text, primary_key=True)
+    data = db.Column(db.Text)
+    note = db.Column(db.Text)
+    title = db.Column(db.Text)
 
 
-@ app.route('/users/<int:id>')
-def user(id):
-    user = User.query.filter_by(id=id).first()
-    return jsonify(user)
+@ app.route('/collage/')
+def collages():
+    result = Collage.query.all()
+    # limit what is transmitted to just ids
+    # result = [{"id": x.id, "title": x.title, "note": x.note} for x in result]
+    result = [r.id for r in result]
+    return jsonify(result)
 
 
-@ app.route('/users/<int:id>', methods=['DELETE'])
-def delete_user(id):
-    user = User.query.filter_by(id=id).first()
-    db.session.delete(user)
-    db.session.commit()
-    return jsonify(user)
+@ app.route('/collage/<string:id>')
+def getCollage(id):
+    result = Collage.query.filter_by(id=id).first()
+
+    data = result.data
+    # parse the json data
+    data = json.loads(data)
+    # return the data
+    result.data = data
+
+    if result is None:
+        return jsonify({"error": "collage not found"}), 404
+    return jsonify(result)
 
 
-@ app.route('/users/delete/', methods=['POST'])
-def post_delete_user():
-    id = request.form.get("id")
-    user = User.query.filter_by(id=id).first()
-    db.session.delete(user)
-    db.session.commit()
-    return redirect(url_for('home'))
-
-
-@ app.route('/users/', methods=['POST'])
-def create_user():
+@ app.route('/collage/', methods=['POST'])
+def create_collage():
     data = request.get_json()
-    user = User(email=data['email'])
-    db.session.add(user)
+    collage = Collage(id=data['id'], data=data['data'],
+                      note=data['note'], title=data['title'])
+    db.session.add(collage)
     db.session.commit()
-    return jsonify(user)
+    return jsonify(collage)
 
 
 with app.app_context():
     db.create_all()
-    users = User.query.all()
-    print(users)
-
 
 # start the server
 app.run(debug=True)
