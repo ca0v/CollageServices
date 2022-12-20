@@ -4,3 +4,5 @@ obj
 CollageServices/photos
 CollageServices/audio
 node_modules
+digital_ocean*
+*.7z

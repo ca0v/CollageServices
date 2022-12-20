@@ -1,47 +1,41 @@
-import sqlalchemy
+from flask_sqlalchemy import SQLAlchemy
+from dataclasses import dataclass
+from flask_restful import Resource, Api, reqparse
+from flask import Flask, jsonify, request
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, MetaData, Table, ForeignKey, DateTime, Boolean, Text, Float
 
+# start a webapi
+app = Flask(__name__)
 
-class User(object):
-    def __init__(self, username, email, password):
-        self.username = username
-        self.email = email
-        self.password = password
+# Either 'SQLALCHEMY_DATABASE_URI' or 'SQLALCHEMY_BINDS' must be set
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite'
 
-    def __repr__(self):
-        return
+api = Api(app)
+db = SQLAlchemy(app)
 
 
-# create metadata
-metadata = MetaData()
+@dataclass
+class User(db.Model):
+    __tablename__ = "users"
+    id: int
+    email: str
 
-# create table
-users = Table('users', metadata,
-              Column('id', Integer, primary_key=True),
-              Column('username', String(50), unique=True),
-              Column('email', String(120), unique=True),
-              Column('password', String(120)),
-              )
+    id = db.Column(db.Integer, primary_key=True, auto_increment=True)
+    email = db.Column(db.String(200), unique=False)
 
-# create engine
-engine = create_engine('sqlite:///users.sqlite', echo=True)
 
-# create tables
-metadata.create_all(engine)
+@ app.route('/users/')
+def users():
+    users = User.query.all()
+    return jsonify(users)
 
-# create a Session
-Session = sessionmaker(engine)
 
-# map Users to the users table
-sqlalchemy.orm.mapper(User, users)
+with app.app_context():
+    db.create_all()
+    users = User.query.all()
+    print(users)
 
-# create a user
-with Session() as session:
-    user = User(username='admin', email='admin@localhost', password='admin')
-    session.add(user)
-    session.commit()
-
-# close the engine
-engine.dispose()
+# start the server
+app.run(debug=True)
