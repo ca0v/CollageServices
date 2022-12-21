@@ -6,3 +6,4 @@ CollageServices/audio
 node_modules
 digital_ocean*
 *.7z
+static

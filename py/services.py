@@ -2,22 +2,21 @@ import json
 from flask_sqlalchemy import SQLAlchemy
 from dataclasses import dataclass
 from flask_restful import Api
-from flask import Flask, jsonify, request
-
-from flask import Flask, render_template, redirect, url_for
-from flask_bootstrap import Bootstrap
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired
+from flask import Flask, jsonify, request, render_template, redirect, url_for
+from flask_cors import CORS, cross_origin
 
 # start a webapi
 app = Flask(__name__)
 
+# fix Access to fetch at 'http://localhost:5000/collage' from origin 'http://localhost:5174' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
+CORS(app)
+
+# Response to preflight request doesn't pass access control check: Redirect is not allowed for a preflight request.
+app.config['CORS_SUPPORTS_CREDENTIALS'] = True
+
+
 # Flask-WTF requires an encryption key - the string can be anything
 app.config['SECRET_KEY'] = "fdd89hf3809fdjkhidf409ruvn-0q325873-4 hfg"
-
-# Flask-Bootstrap requires this line
-Bootstrap(app)
 
 # Either 'SQLALCHEMY_DATABASE_URI' or 'SQLALCHEMY_BINDS' must be set
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite'
@@ -61,13 +60,15 @@ class Collage(db.Model):
     title = db.Column(db.Text)
 
 
-@ app.route('/collage/')
+@ app.route('/collage/', methods=['GET'])
 def collages():
     result = Collage.query.all()
     # limit what is transmitted to just ids
     # result = [{"id": x.id, "title": x.title, "note": x.note} for x in result]
     result = [r.id for r in result]
-    return jsonify(result)
+
+    response = jsonify(result)
+    return response
 
 
 @ app.route('/collage/<string:id>')
@@ -75,28 +76,46 @@ def getCollage(id):
     result = Collage.query.filter_by(id=id).first()
 
     data = result.data
-    # parse the json data
-    data = json.loads(data)
-    # return the data
-    result.data = data
+    if data is not None:
+        # parse the json data
+        data = json.loads(data)
+        # return the data
+        result.data = data
 
     if result is None:
         return jsonify({"error": "collage not found"}), 404
+
     return jsonify(result)
 
 
 @ app.route('/collage/', methods=['POST'])
 def create_collage():
-    data = request.get_json()
-    collage = Collage(id=data['id'], data=data['data'],
-                      note=data['note'], title=data['title'])
-    db.session.add(collage)
-    db.session.commit()
-    return jsonify(collage)
+    requestData = request.get_json()
+    id = requestData['id']
+    note = requestData['note']
+    title = requestData['title']
+    data = json.dumps(requestData['data'])
+
+    collage = Collage(id=id, data=data, note=note, title=title)
+
+    match = Collage.query.filter_by(id=id).first()
+
+    if match is None:
+        db.session.add(collage)
+        db.session.commit()
+        return jsonify({"message": "collage created"}), 201
+    else:
+        match.data = data
+        match.note = note
+        match.title = title
+        # save changes
+        db.session.merge(match)
+        db.session.commit()
+        return jsonify({"message": "collage updated"}), 200
 
 
 with app.app_context():
     db.create_all()
 
 # start the server
-app.run(debug=True)
+app.run(debug=True, host='localhost', port=5000)

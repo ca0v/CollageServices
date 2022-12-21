@@ -1,0 +1,19 @@
+{
+    "name": "collageservices",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "update-svelte-lab": "cd ~/code/ca0v/svelte-lab && npm run build",
+        "update-collage-builder": "cd ~/code/corey-alix/collage-builder && npm run build",
+        "copy-svelte-lab": "cp -r ~/code/ca0v/svelte-lab/dist/ ./static/svelte-lab/",
+        "update": "npm-run-all -p update-* && npm run copy-svelte-lab",
+        "watch": "python3 services.py"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "npm-run-all": "^4.1.5"
+    }
+}
